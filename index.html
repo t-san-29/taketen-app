@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>尺メートル法 変換ツール</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>尺メートル法 変換ツール</h1>
+    <p>建築で使う尺貫法 ↔ メートル法の変換・早見表</p>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-tab="length" role="tab" aria-selected="true">長さ</button>
+    <button class="tab" data-tab="area" role="tab" aria-selected="false">面積</button>
+    <button class="tab" data-tab="volume" role="tab" aria-selected="false">体積・容積</button>
+  </nav>
+
+  <main>
+
+    <!-- 長さ -->
+    <section id="length" class="tab-content active">
+      <div class="converter card">
+        <h2>変換計算機</h2>
+        <div class="input-row">
+          <input type="number" id="length-input" placeholder="数値を入力" min="0" step="any">
+          <select id="length-from"></select>
+        </div>
+        <div id="length-results" class="results-grid"></div>
+      </div>
+
+      <div class="card">
+        <h2>換算早見表</h2>
+        <div class="table-scroll">
+          <table id="length-table" class="ref-table">
+            <thead></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card tip-card">
+        <h2>建築でよく使う基準値</h2>
+        <ul class="tips">
+          <li><strong>1尺</strong> ≈ <span>303 mm</span>（現場では「300」と言うことも）</li>
+          <li><strong>1間</strong> = <span>1,820 mm</span>（6尺。柱芯々の基本モジュール）</li>
+          <li><strong>1寸</strong> ≈ <span>30.3 mm</span>（柱寸法など「3寸5分」= 105mm）</li>
+          <li><strong>3尺</strong> = <span>910 mm</span>（半間。合板・石膏ボードの基準幅）</li>
+          <li><strong>6尺 = 1間</strong> = <span>1,820 mm</span> ≈ 畳1枚の長辺</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 面積 -->
+    <section id="area" class="tab-content">
+      <div class="converter card">
+        <h2>変換計算機</h2>
+        <div class="input-row">
+          <input type="number" id="area-input" placeholder="数値を入力" min="0" step="any">
+          <select id="area-from"></select>
+        </div>
+        <div id="area-results" class="results-grid"></div>
+      </div>
+
+      <div class="card">
+        <h2>換算早見表</h2>
+        <div class="table-scroll">
+          <table id="area-table" class="ref-table">
+            <thead></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card tip-card">
+        <h2>面積の目安</h2>
+        <ul class="tips">
+          <li><strong>1坪</strong> ≈ <span>3.31 m²</span>（畳2枚分）</li>
+          <li><strong>1畳</strong> ≈ <span>1.65 m²</span>（地域差あり・江戸間・京間など）</li>
+          <li><strong>20坪</strong> ≈ <span>66 m²</span>（一般的な住宅の延床面積の目安）</li>
+          <li><strong>1m²</strong> ≈ <span>0.3025 坪</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 体積・容積 -->
+    <section id="volume" class="tab-content">
+      <div class="converter card">
+        <h2>変換計算機</h2>
+        <div class="input-row">
+          <input type="number" id="volume-input" placeholder="数値を入力" min="0" step="any">
+          <select id="volume-from"></select>
+        </div>
+        <div id="volume-results" class="results-grid"></div>
+      </div>
+
+      <div class="card">
+        <h2>換算早見表</h2>
+        <div class="table-scroll">
+          <table id="volume-table" class="ref-table">
+            <thead></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card tip-card">
+        <h2>体積の目安</h2>
+        <ul class="tips">
+          <li><strong>1合</strong> = <span>180.4 mL</span>（お米1合、お酒1合）</li>
+          <li><strong>1升</strong> = <span>1.804 L</span>（一升瓶・一升缶）</li>
+          <li><strong>1斗</strong> = <span>18.04 L</span>（一斗缶）</li>
+          <li><strong>1石</strong> = <span>180.4 L</span>（10斗。昔の米の収量単位）</li>
+          <li><strong>1m³（立米）</strong> = <span>1,000 L</span>（コンクリート・土量の単位）</li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>換算値は計量法に基づく定義値を使用。1尺 = 10/33 m（約303.03mm）</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
