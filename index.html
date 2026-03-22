@@ -1,18 +1,54 @@
 <!DOCTYPE html>
+<!--
+  尺メートル法 変換ツール
+  ========================
+  建築業界で使われる尺貫法とメートル法を相互変換するWebツール。
+  フレームワーク・ライブラリ不使用。HTML / CSS / JavaScript のみで構成。
+  GitHub Pages で静的ホスティングしている。
+
+  ファイル構成:
+    index.html  … このファイル。ページ構造とコンテンツのマークアップ
+    style.css   … 全スタイル定義（レスポンシブ・印刷対応含む）
+    app.js      … 変換ロジックとDOM操作（タブ・セレクト・結果表示・換算表生成）
+
+  ページ構成:
+    <header>   … タイトルとサブタイトル
+    <nav>      … タブナビゲーション（長さ / 面積 / 体積・容積）
+    <main>     … 3つのセクション（タブごとに1つ）
+      各セクション:
+        .converter.card  … 変換計算機（入力→即時変換）
+        .card            … 換算早見表（全単位の組み合わせ表）
+        .tip-card        … 建築で使う豆知識・基準値
+    <footer>   … 換算値の出典情報
+-->
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <!-- スマホでの表示幅をデバイス幅に合わせる（レスポンシブ対応の基本設定） -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>尺メートル法 変換ツール</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+  <!-- ========================================
+    ヘッダー
+    ページ最上部に固定表示されるタイトルエリア。
+    デザインはネイビー背景（--primary）。
+  ======================================== -->
   <header>
     <h1>尺メートル法 変換ツール</h1>
     <p>建築で使う尺貫法 ↔ メートル法の変換・早見表</p>
   </header>
 
+  <!-- ========================================
+    タブナビゲーション
+    カテゴリ（長さ / 面積 / 体積）を切り替えるボタン群。
+    role="tablist" / role="tab" / aria-selected はアクセシビリティ用属性。
+
+    data-tab 属性にセクションの id を指定しておき、
+    app.js 側でこの値を読み取って対応するセクションを表示切り替えする。
+  ======================================== -->
   <nav class="tabs" role="tablist">
     <button class="tab active" data-tab="length" role="tab" aria-selected="true">長さ</button>
     <button class="tab" data-tab="area" role="tab" aria-selected="false">面積</button>
@@ -21,27 +57,47 @@
 
   <main>
 
-    <!-- 長さ -->
+    <!-- ========================================
+      長さセクション
+      id="length" がタブの data-tab="length" と対応している。
+      初期表示は class="active" が付いておりデフォルトで表示される。
+      他のセクションは class="tab-content" のみで初期は非表示（display:none）。
+    ======================================== -->
     <section id="length" class="tab-content active">
+
+      <!-- 変換計算機カード
+           入力欄（数値）とセレクトボックス（単位選択）を横並びに配置。
+           セレクトボックスの中身（option要素）は app.js の initCategory() が動的に生成する。
+           入力値の変化を app.js がリッスンし、全単位への換算結果を
+           #length-results の中にカード形式で描画する。 -->
       <div class="converter card">
         <h2>変換計算機</h2>
         <div class="input-row">
           <input type="number" id="length-input" placeholder="数値を入力" min="0" step="any">
+          <!-- このセレクトボックスの中身は app.js が生成する（尺貫法 / メートル法のoptgroup付き） -->
           <select id="length-from"></select>
         </div>
+        <!-- 変換結果が入るグリッドコンテナ。app.js の doConvert() が中身を書き換える -->
         <div id="length-results" class="results-grid"></div>
       </div>
 
+      <!-- 換算早見表カード
+           「1尺 = ○○mm = ○○cm ...」という全単位の組み合わせ表。
+           thead / tbody の中身は app.js の buildTable() が生成する。 -->
       <div class="card">
         <h2>換算早見表</h2>
+        <!-- スマホで横スクロールできるようにするラッパー -->
         <div class="table-scroll">
           <table id="length-table" class="ref-table">
-            <thead></thead>
-            <tbody></tbody>
+            <thead></thead><!-- app.js が列ヘッダーを生成 -->
+            <tbody></tbody><!-- app.js が各行を生成 -->
           </table>
         </div>
       </div>
 
+      <!-- 建築ヒントカード
+           現場でよく使う基準値を静的に記載したコンテンツ。
+           変換ロジックとは独立しており、HTML に直書きしている。 -->
       <div class="card tip-card">
         <h2>建築でよく使う基準値</h2>
         <ul class="tips">
@@ -54,8 +110,13 @@
       </div>
     </section>
 
-    <!-- 面積 -->
+    <!-- ========================================
+      面積セクション
+      構造は長さセクションと同じ。
+      id="area" がタブの data-tab="area" と対応。
+    ======================================== -->
     <section id="area" class="tab-content">
+
       <div class="converter card">
         <h2>変換計算機</h2>
         <div class="input-row">
@@ -86,8 +147,13 @@
       </div>
     </section>
 
-    <!-- 体積・容積 -->
+    <!-- ========================================
+      体積・容積セクション
+      構造は長さセクションと同じ。
+      id="volume" がタブの data-tab="volume" と対応。
+    ======================================== -->
     <section id="volume" class="tab-content">
+
       <div class="converter card">
         <h2>変換計算機</h2>
         <div class="input-row">
@@ -121,10 +187,17 @@
 
   </main>
 
+  <!-- ========================================
+    フッター
+    換算値の根拠（計量法の定義値）を明示する。
+    1尺 = 10/33 m は日本の計量法で定められた定義値。
+  ======================================== -->
   <footer>
     <p>換算値は計量法に基づく定義値を使用。1尺 = 10/33 m（約303.03mm）</p>
   </footer>
 
+  <!-- app.js は body の末尾で読み込む。
+       DOM が構築された後に実行されることが保証される。 -->
   <script src="app.js"></script>
 </body>
 </html>
